@@ -19,6 +19,85 @@ else:
         password="kangtaehyun52!"
     )
 
+def init_db():
+    try:
+        cur = conn.cursor()
+        
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS universities (
+                id SERIAL PRIMARY KEY,
+                uni_name VARCHAR(100) NOT NULL,
+                city VARCHAR(50),
+                topik_requirement INT
+            );
+        """)
+        conn.commit()
+        
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS language_institutes (
+                id SERIAL PRIMARY KEY,
+                university_id INT REFERENCES universities(id) ON DELETE CASCADE,
+                tuition_fee INT
+            );
+        """)
+        conn.commit()
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS majors (
+                id SERIAL PRIMARY KEY,
+                university_id INT REFERENCES universities(id) ON DELETE CASCADE,
+                department_name VARCHAR(100),
+                major_name VARCHAR(100)
+            );
+        """)
+        conn.commit()
+
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS tuition_fees (
+                id SERIAL PRIMARY KEY,
+                university_id INT REFERENCES universities(id) ON DELETE CASCADE,
+                department_name VARCHAR(100),
+                tuition_fee INT
+            );
+        """)
+        conn.commit()
+
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS scholarships (
+                id SERIAL PRIMARY KEY,
+                university_id INT REFERENCES universities(id) ON DELETE CASCADE,
+                score VARCHAR(100),
+                percentage INT
+            );
+        """)
+        conn.commit()
+        
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS questions (
+                id SERIAL PRIMARY KEY,
+                title VARCHAR(200) NOT NULL,
+                content TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
+        conn.commit()
+        
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS answer (
+                id SERIAL PRIMARY KEY,
+                question_id INT REFERENCES questions(id) ON DELETE CASCADE,
+                content TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+        """)
+        conn.commit()
+        cur.close()
+        print("====== 클라우드 DB 테이블 초기화 완료 ======")
+    except Exception as e:
+        print(f"DB 초기화 중 에러 발생: {e}")
+        conn.rollback()  
+
+init_db()
+
 @app.route('/')
 def home():
     return render_template('home.html')
