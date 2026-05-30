@@ -3,19 +3,69 @@ def normalize_name(name):
 
 import pandas as pd
 import psycopg2
+import os
 
-# PostgreSQL connection
-conn = psycopg2.connect(
-    host="localhost",
-    database="kstudy",
-    user="postgres",
-    password="kangtaehyun52!"
-)
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
+conn = psycopg2.connect(DATABASE_URL)
 
 cur = conn.cursor()
 
 # Read Excel file
 excel_file = "data/uni_data.xlsx"
+
+df = pd.read_excel(excel_file, sheet_name="University")
+
+for _, row in df.iterrows():
+    cur.execute("""
+        INSERT INTO universities
+        (uni_name, city, address, website, office_phone, student_number, topik_requirement)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
+    """, (
+        row['uni_name'],
+        row['city'],
+        row['address'],
+        row['website'],
+        row['office_phone'],
+        row['student_number'],
+        row['topik_requirement']
+    ))
+
+conn.commit()
+
+print("University data imported successfully!")
+
+
+language_df = pd.read_excel(
+    excel_file,
+    sheet_name="LanguageInstitute"
+)
+
+language_df.columns = language_df.columns.str.strip().str.lower()
+
+for _, row in language_df.iterrows():
+
+    cur.execute(
+        "SELECT id FROM universities WHERE uni_name = %s",
+        (row['uni_name'],)
+    )
+
+    university = cur.fetchone()
+
+    if university:
+
+        university_id = university[0]
+
+        cur.execute("""
+            INSERT INTO language_institutes
+            (university_id, tuition_fee, lang_url, lang_email)
+            VALUES (%s, %s, %s, %s)
+        """, (
+            university_id,
+            row['tuition_fee'],
+            row['lang_url'],
+            row['lang_email']
+        ))
 
 # =========================
 # University Name Mapping
@@ -171,3 +221,8 @@ for _, row in majors_df.iterrows():
 print("===== Majors Import Complete =====\n")
 
 conn.commit()
+
+cur.close()
+conn.close()
+
+print("All Data Imported Successfully!")

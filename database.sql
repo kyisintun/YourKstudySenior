@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS users, posts, answer, questions, scholarships, tuition_fees, majors, language_institutes, universities CASCADE;
+
 CREATE TABLE universities (
     id SERIAL PRIMARY KEY,
     uni_name VARCHAR(255) NOT NULL,
@@ -60,10 +62,24 @@ CREATE TABLE posts (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE answers (
+CREATE TABLE questions (
+
     id SERIAL PRIMARY KEY,
-    post_id INTEGER REFERENCES posts(id) ON DELETE CASCADE,
-    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-    content TEXT NOT NULL,
+
+    title VARCHAR(255),
+
+    content TEXT,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE answer (
+
+    id SERIAL PRIMARY KEY,
+
+    question_id INTEGER REFERENCES questions(id),
+
+    content TEXT,
+
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
