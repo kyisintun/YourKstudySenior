@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Undergraduate Program Details</h1>
+
+<div class="section-box">
+    <h2>Available Majors</h2>
+    <div class="section-box" style="border-left: 5px solid #303338;">
+        <p>
+            The following departments and majors are the ones which international students can apply. <br> 
+            Please note that these are Korean-track majors and taught in Korean. <br> 
+            I will update the English-track majors later. <br> 
+            For specified information, please refer to the official application guidelines.
+        </p>
+    </div>
+
+    {% if majors %}
+        <table class="info-table">
+            <thead>
+                <tr>
+                    <th style="width: 40%;">Department</th>
+                    <th style="width: 60%;">Major</th>
+                </tr>
+            </thead>
+            <tbody>
+                {# 직전 루프의 단과대학 이름을 저장할 변수 초기화 #}
+                {% set last_dept = namespace(name='') %}
+                
+                {% for major in majors %}
+                <tr>
+                    <td>
+                        {# 현재 단과대학이 이전과 다를 때만 텍스트 출력 #}
+                        {% if major[0] != last_dept.name %}
+                            <strong>{{ major[0] }}</strong>
+                            {# 다음 비교를 위해 현재 이름을 저장 #}
+                            {% set last_dept.name = major[0] %}
+                        {% else %}
+                            {# 동일한 단과대학일 경우 빈칸으로 두고 시각적 여백 유지 #}
+                        {% endif %}
+                    </td>
+                    <td>{{ major[1] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-muted">No major information available for this university.</p>
+    {% endif %}
+</div>
+
+<div class="section-box">
+    <h2>Tuition Fees</h2>
+    <div class="section-box" style="border-left: 5px solid #303338;">
+        <p>
+            The following is the tuition fees of each department. <br> 
+            The tuition fees may differ depending on the majors even if they are under the same department. <br> 
+            I collected these information according to the tuition fees for 2026 Spring Semester. <br> 
+            Please refer to the official application guidelines for detailed information.
+        </p>
+    </div>
+    
+    
+    {% if tuition_fees %}
+        <table class="info-table">
+            <thead>
+                <tr>
+                    <th>Department</th>
+                    <th>Tuition Fee (per semester)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tuition in tuition_fees %}
+                <tr>
+                    <td><strong>{{ tuition[0] }}</strong></td>
+                    <td>{{ tuition[1] }} KRW</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-muted">No tuition fee information available.</p>
+    {% endif %}
+</div>
+
+<div class="section-box">
+    <h2>TOPIK Admission Scholarships</h2>
+
+    <div class="section-box" style="border-left: 5px solid #303338;">
+        <p>
+            These are the TOPIK admission scholarships that each university offers. <br> 
+            Please note that some universities do not offer TOPIK admission scholarships. <br> 
+            Universities offer various scholarships apart from TOPIK admission scholarships. <br> 
+            Please refer to the official admission guidelines for detailed information. 
+        </p>
+    </div>
+
+    {% if scholarships %}
+        <table class="info-table">
+            <thead>
+                <tr>
+                    <th>Condition / TOPIK Score</th>
+                    <th>Scholarship Percentage</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for scholarship in scholarships %}
+                <tr>
+                    <td><strong>{{ scholarship[0] }}</strong></td>
+                    <td>{{ scholarship[1] }}% Reduction</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-muted">No specific entrance scholarship information listed.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

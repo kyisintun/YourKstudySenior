@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h1 style="margin: 0;">Ask your K-study Senior</h1>
+    <a href="/create-question">
+        <button type="button">Create Question</button>
+    </a>
+</div>
+
+<div class="section-box" style="margin-bottom: 30px; border-left: 4px solid #303338;">
+    <p style="margin: 0; line-height: 1.8; color: #555;">
+        You can freely ask about the admission guidelines, or the experiences of your seniors. <br> 
+        You can freely answer the questions of your juniors, of course. <br> 
+        I might as well actively answer your questions. 
+    </p>
+</div>
+
+<div class="section-box" style="padding: 10px 20px;">
+    {% if questions %}
+        {% for question in questions %}
+        <div class="qna-row" style="display: flex; justify-content: space-between; align-items: center; padding: 20px 10px;">
+            <div>
+                <h3 style="margin: 0 0 6px 0; display: flex; align-items: center; gap: 10px;">
+                    <a href="/question/{{ question.id }}">{{ question.title }}</a>
+                    
+                    <span style="
+                        background-color: #ebedf0; 
+                        color: #4a5568; 
+                        font-size: 13px; 
+                        font-weight: 600; 
+                        padding: 2px 8px; 
+                        border-radius: 12px;
+                        display: inline-block;
+                    ">
+                        {{ question.answer_count }}
+                    </span>
+                </h3>
+                <p class="text-muted" style="margin: 0;">Posted on: {{ question.created_at }}</p>
+            </div>
+            
+            <div style="color: #cbd5e0; font-size: 20px; font-weight: bold;">&rsaquo;</div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p style="padding: 20px; text-align: center; color: #a0aec0;">No questions asked yet. Be the first!</p>
+    {% endif %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Top 20 Korean Universities</h1>
+
+<div class="section-box">
+    <p>
+        중앙일보 ranking 기준 top 20 대학에 대한 정보들을 모아보았습니다. <br> 
+        2026년 봄 학기 모집요강을 바탕으로 정리한 것이라 실제 내용과 다를 수 있습니다. <br> 
+        참고용으로만 봐 주시고 official homepage 에서 정확한 정보를 확인해 주시기 바랍니다.
+    </p>
+</div>
+
+{% for university in universities %}
+<div class="card-item">
+    <!-- 대학교 이름 (텍스트만 깔끔하게 노출하거나, 클릭 시 상세페이지로 가게 유지) -->
+    <h2>{{ university[1] }}</h2>
+
+    <p><strong>City:</strong> {{ university[2] }}</p>
+    <p><strong>Address:</strong> {{ university[3] }}</p>
+    
+    <!-- 버튼 2개를 나란히 배치하는 컨테이너 -->
+    <div class="flex-container" style="margin-top: 20px;">
+        <!-- 1. 내부 상세 페이지(우리 웹사이트의 다음 페이지)로 이동하는 버튼 -->
+        <a href="/university/{{ university[0] }}">
+            <button type="button">View Details</button>
+        </a>
+
+        <!-- 2. 외부 공식 홈페이지로 이동하는 버튼 (기존과 색상 구분을 위해 연한 스타일 적용) -->
+        <a href="{{ university[4] }}" target="_blank" class="website-button" style="background-color: #5a626a; margin-top: 0;">
+            Go to Official Website
+        </a>
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}

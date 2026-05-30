@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="section-box">
+    <h1>{{ question[0] }}</h1>
+    <p style="font-size: 16px; color: #4a5568; margin-bottom: 20px; white-space: pre-wrap;">{{ question[1] }}</p>
+    <div>
+        <small class="text-muted">Created at: {{ question[2] }}</small>
+    </div>
+</div>
+
+<h2>Answers</h2>
+{% if answers %}
+    {% for answer in answers %}
+    <div class="section-box" style="margin-bottom: 15px; padding: 20px 25px;">
+        <p style="white-space: pre-wrap; margin-bottom: 15px;">{{ answer[1] }}</p>
+        <div>
+            <small class="text-muted">Answered at: {{ answer[2] }}</small>
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+    <div class="section-box" style="text-align: center; color: #a0aec0; padding: 20px;">
+        No answers yet. Share your experience below!
+    </div>
+{% endif %}
+
+<div class="section-box" style="margin-top: 30px;">
+    <h2>Write Answer</h2>
+    <form method="POST">
+        <textarea name="content" rows="5" placeholder="Type your helpful response here..." required></textarea>
+        <button type="submit">Submit Answer</button>
+    </form>
+</div>
+
+{% endblock %}

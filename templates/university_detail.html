@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>{{ university[1] }}</h1>
+
+<div class="section-box">
+    <h3>Basic Information</h3>
+    <table class="info-table">
+        <tr>
+            <th>City</th>
+            <td>{{ university[2] }}</td>
+        </tr>
+        <tr>
+            <th>Address</th>
+            <td>{{ university[3] }}</td>
+        </tr>
+    </table>
+    <br>
+    <a href="{{ university[4] }}" target="_blank" class="website-button">Official Website</a>
+</div>
+
+<div class="menu-grid" style="margin-top: 30px;">
+    <a href="/language-program/{{ university[0] }}" class="menu-card">
+        <h2>Language Program</h2>
+        <p>Check out the tuition fees, application details, and contacts for the language school.</p>
+    </a>
+    <a href="/undergraduate-program/{{ university[0] }}" class="menu-card">
+        <h2>Undergraduate Program</h2>
+        <p>Explore majors, department tuition fees, and special admission scholarships.</p>
+    </a>
+</div>
+
+{% endblock %}

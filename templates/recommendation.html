@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>University Recommendation</h1>
+
+<div class="section-box">
+    <form method="POST">
+        <!-- 1. 프로그램 타입 선택 (라디오 버튼 스타일) -->
+        <label style="font-size: 16px; margin-bottom: 12px;">What program are you looking for?</label>
+        <div class="flex-container" style="margin-bottom: 25px; gap: 20px;">
+            <label style="display: inline-flex; align-items: center; font-weight: normal; cursor: pointer;">
+                <input type="radio" name="program_type" value="language" checked onclick="toggleFields('language')" style="margin-right: 8px; transform: scale(1.2);">
+                Language Program
+            </label>
+            <label style="display: inline-flex; align-items: center; font-weight: normal; cursor: pointer;">
+                <input type="radio" name="program_type" value="undergraduate" onclick="toggleFields('undergraduate')" style="margin-right: 8px; transform: scale(1.2);">
+                Undergraduate Program
+            </label>
+        </div>
+
+        <!-- 2. 공통 입력 필드: 지역 및 등록금 범위 -->
+        <label for="city">Preferred City (Choose: 서울, 경기, 인천, Please write in Korea)</label>
+        <input type="text" id="city" name="city" placeholder="e.g. Seoul" required>
+
+        <label>Tuition Fee Range (KRW per semester)</label>
+        <div class="flex-container" style="gap: 15px; margin-bottom: 20px;">
+            <input type="number" name="min_budget" placeholder="Min (e.g. 1000000)" min="0" required style="margin-bottom: 0;">
+            <span style="align-self: center; font-weight: bold; color: #718096;">~</span>
+            <input type="number" name="max_budget" placeholder="Max (e.g. 5000000)" min="0" required style="margin-bottom: 0;">
+        </div>
+
+        <!-- 3. 학부(Undergraduate) 선택 시에만 보여주는 필드들 -->
+        <div id="undergraduate_fields" style="display: none; border-top: 1px solid #edf2f7; padding-top: 20px; margin-top: 10px;">
+            <label for="major">Preferred Major</label>
+            <input type="text" id="major" name="major" placeholder="e.g. 기계학과 please write it in Korea. (Leave blank for all.)">
+
+            <label for="topik">Your TOPIK Level</label>
+            <input type="number" id="topik" name="topik" placeholder="e.g. 3" min="1" max="6">
+        </div>
+
+        <button type="submit" style="width: 100%; margin-top: 10px; padding: 14px;">Get Recommendation</button>
+    </form>
+</div>
+
+<!-- 추천 결과 표시 섹션 -->
+{% if recommendations %}
+<div style="margin-top: 40px;">
+    <h2>Recommended Results</h2>
+    {% for row in recommendations %}
+    <div class="card-item">
+        <h3>{{ row.uni_name }}</h3>
+        <p><strong>City:</strong> {{ row.city }}</p>
+        
+        {% if program_type == 'language' %}
+            <!-- 어학당 결과 폼 -->
+            <p><strong>Language Tuition Fee:</strong> {{ row.tuition_fee }} KRW</p>
+        {% else %}
+            <!-- 학부 결과 폼 -->
+            <p><strong>Department:</strong> {{ row.department_name }}</p>
+            <p><strong>Major:</strong> {{ row.major_name }}</p>
+            <p><strong>Major Tuition Fee:</strong> {{ row.tuition_fee }} KRW</p>
+            <p><strong>TOPIK Requirement:</strong> Level {{ row.topik_requirement }}</p>
+        {% endif %}
+        
+        <a href="/university/{{ row.id }}" style="display: inline-block; margin-top: 10px;">
+            <button style="padding: 10px 20px; font-size: 13px;">View Details</button>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+{% elif program_type %}
+<div class="section-box" style="text-align: center; color: #a0aec0;">
+    No universities match your criteria. Try adjusting your budget or TOPIK level!
+</div>
+{% endif %}
+
+<!-- 동적 필드 제어 스크립트 -->
+<script>
+function toggleFields(type) {
+    const undergradFields = document.getElementById('undergraduate_fields');
+    const majorInput = document.getElementById('major');
+    const topikInput = document.getElementById('topik');
+
+    if (type === 'undergraduate') {
+        undergradFields.style.display = 'block';
+        topikInput.required = true;
+    } else {
+        undergradFields.style.display = 'none';
+        topikInput.required = false;
+        majorInput.value = '';
+        topikInput.value = '';
+    }
+}
+</script>
+
+{% endblock %}
