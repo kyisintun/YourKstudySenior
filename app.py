@@ -2,16 +2,22 @@ from flask import Flask, render_template
 from flask import request, redirect
 import psycopg2
 import os
+import psycopg2
+
 
 app = Flask(__name__)
 
-# PostgreSQL connection
-conn = psycopg2.connect(
-    host="localhost",
-    database="kstudy",
-    user="postgres",
-    password="kangtaehyun52!"
-)
+db_url = os.environ.get('DATABASE_URL')
+
+if db_url: 
+    conn = psycopg2.connect(db_url)
+else:
+    conn = psycopg2.connect(
+        host="localhost",
+        database="kstudy",
+        user="postgres",
+        password="kangtaehyun52!"
+    )
 
 @app.route('/')
 def home():
